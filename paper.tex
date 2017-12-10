@@ -1,0 +1,70 @@
+\documentclass[]{article}
+%\documentclass[]{article}
+
+% Language-specific settings
+\usepackage[english]{babel}
+% Use of UTF-8 for input
+\usepackage[utf8x]{inputenc}
+
+% Hyperlinks for internal references
+\usepackage{hyperref}
+% Change link colors and set up
+\hypersetup{
+	colorlinks,
+    	linkcolor={red!50!black},
+    	citecolor={black},
+    	linktoc=all,
+    	urlcolor={blue!80!black}
+}
+
+% Graphics and images
+\usepackage{graphicx}
+\usepackage{float}
+% Tables
+\usepackage{tabu}
+% Subfigures
+\usepackage{subfig}
+
+\usepackage{enumerate}
+
+% Math symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+% Proof system
+\usepackage{amsthm}
+
+% Margin
+\usepackage[margin=1.5in]{geometry}% Quotes
+\usepackage{cite}
+\usepackage{csquotes}
+
+
+\setlength{\parindent}{0pt}
+
+
+\title{}
+\author{Corbinian Stiglmair}
+
+\pagestyle{plain}
+
+%--------------------------------------Start------------------------------------
+\begin{document}
+% Titlepage + table of contents
+\pagenumbering{gobble}
+\maketitle
+\newpage
+\tableofcontents
+\newpage
+
+\pagenumbering{arabic}
+% Begin text
+\begin{sloppypar}
+\newpage
+% Sources
+\bibliography{bibliography}
+\bibliographystyle{apalike}
+
+\end{sloppypar}
+
+\end{document}
