@@ -4,7 +4,9 @@
 % Language-specific settings
 \usepackage[english]{babel}
 % Use of UTF-8 for input
-\usepackage[utf8x]{inputenc}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
 
 % Color
 \usepackage{xcolor}
@@ -40,8 +42,10 @@
 % Margin
 \usepackage[margin=1.5in]{geometry}
 
+%Bibliography
+\usepackage[backend=biber, style=numeric-comp]{biblatex}
+\bibliography{bibliography}
 % Quotes
-\usepackage{cite}
 \usepackage{csquotes}
 
 
@@ -49,7 +53,7 @@
 
 
 \title{}
-\author{Corbinian Stiglmair}
+\author{}
 
 \pagestyle{plain}
 
@@ -67,8 +71,7 @@
 \begin{sloppypar}
 \newpage
 % Sources
-\bibliography{bibliography}
-\bibliographystyle{apalike}
+\printbibliography
 
 \end{sloppypar}
 
