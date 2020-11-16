@@ -71,11 +71,23 @@
 \begin{sloppypar}
 \section{Introduction}
 This report is meant to document the progress made on our given project. This projects goal is to configure (and program) a system, that can give an accurate count of the current amount of persons in a room.
-\section{Tools and Systemcomponents}
-
+\section{Tools and System Components}
+Our Prototype consists of the following components:
+\begin{itemize}
+	\item Breadboard\footnote{TRU COMPONENTS 0165-40-4-28010 Steckplatine}
+	\item Adafruit Feather M0 Board (with RFM95 LoRa Radio - 900MHz - RadioFruit)
+	\item OLED Screen\footnote{Joy-it SBC-OLED01}
+	\item Photoelectric Barrier\footnote{Iduino 1485329}
+	\item Jumper Cables
+	\item USB Cable
+\end{itemize}
 \section{Approach}
 Instead of focusing on the individual work sessions, this report will instead describe how partial subgoals were achieved and how the subgoals are intertwined with each other.
+\subsection{Adafruit Feather M0 Board}
+In order to compile code for this board the installation of the Boards \textit{Arduino SAMD Boards} and \textit{Adafruit SAMD Boards} is required.
 \subsection{OLED-Screen}
+the OLED-Screen requires the installation of the two libraries \textit{Adafruit SSD 1306} and its dependency \textit{Adafruit GFX Library}.
+\subsection{Photoelectric Barrier}
 \newpage
 % Sources
 \printbibliography
