@@ -11,7 +11,7 @@ const byte ledPin = LED_BUILTIN;
 const byte sensorPin1 = 11;
 const byte sensorPin2 = 12;
 
-bool state[4] = {false, false, false, false};
+int state[4] = {LOW, LOW, LOW, LOW};
 
 uint8_t count;
 
@@ -34,7 +34,7 @@ void loop() {
 
   readSensor(state);
 
-  if(state[0] == true || state[1] == true)
+  if(state[0] == HIGH || state[1] == HIGH)
   {
     digitalWrite(ledPin,HIGH);
   }
@@ -46,17 +46,15 @@ void loop() {
   display.clearDisplay();
   display.setTextColor(WHITE);
   display.setTextSize(3);
-  display.setCursor(35,5);
-  display.println(int(state[0]));
+  display.setCursor(5,5);
+  display.println("E:" + state[0] + " O:" + state[1]);
   display.display();delay(50);
   }
 
-void readSensor(bool state[]){
+void readSensor(int state[]){
 
   state[2] = state[0];
   state[3] = state[1];
   state[0] =digitalRead(sensorPin1);
   state[1] =digitalRead(sensorPin2);
-
-  return state;
 }
