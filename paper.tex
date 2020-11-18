@@ -88,6 +88,15 @@ In order to compile code for this board the installation of the Boards \textit{A
 \subsection{OLED-Screen}
 the OLED-Screen requires the installation of the two libraries \textit{Adafruit SSD 1306} and its dependency \textit{Adafruit GFX Library}.
 \subsection{Photoelectric Barrier}
+The barrier activates, whenever something obstructs its two endpoints. See, for reference \eqref{img:iduino_highlighted}.\\
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth, keepaspectratio]{./images/iduino_highlighted.png}
+	\caption{The photoelectric sensor (Iduino 1485329) with the corresponding endpoints highlighted.}\label{img:iduino_highlighted}
+\end{figure}	
+We use this to simulate the entries of persons by passing a black stripe through each of the two sensors.
+\subsection{Interrupt Handling}
+We attach interrupt routines to both our sensors\footnote{as described here \url{https://www.arduino.cc/reference/de/language/functions/external-interrupts/attachinterrupt/}}. One advantage of this is, that the CPU can enter a power-save mode.
 \newpage
 % Sources
 \printbibliography
