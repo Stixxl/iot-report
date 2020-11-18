@@ -11,7 +11,8 @@ const byte ledPin = LED_BUILTIN;
 const byte sensorPin1 = 11;
 const byte sensorPin2 = 12;
 
-bool state[4] = {false, false, false, false};
+boolean isHigh1 = false;
+boolean isHigh2 = false;
 
 uint8_t count;
 
@@ -23,40 +24,48 @@ void setup()   {
   pinMode(ledPin,OUTPUT);
   pinMode(sensorPin1,INPUT);
   pinMode(sensorPin2,INPUT);
-
+  attachInterrupt(digitalPinToInterrupt(sensorPin1), onRising1, RISING);
+  attachInterrupt(digitalPinToInterrupt(sensorPin2), onRising2, RISING);
+  //We probably also need to react to falling interrupts to catch cases where not both gates are triggered
   count = 0;
 }
 
-int i;
-
 void loop() {
-
-
-  readSensor(state);
-
-  if(state[0] == true || state[1] == true)
-  {
-    digitalWrite(ledPin,HIGH);
+  showRoomState();
+  delay(2000);
   }
-  else
-  {
-    digitalWrite(ledPin,LOW);
-  }
+
+void onRising1() {
+  Serial.println("Sensor 1 high");
+  isHigh1 = true;
   
+  if(isHigh2) {
+    Serial.println("Person exiting");
+    count--;
+    isHigh1 = false;
+    isHigh2 = false;
+  }
+
+}
+
+void onRising2() {
+  Serial.println("Sensor 2 high");
+  isHigh2 = true;
+
+  if(isHigh1) {
+    Serial.println("Person entering");
+    count++;
+    isHigh1 = false;
+    isHigh2 = false;
+  }
+}
+
+void showRoomState() {
   display.clearDisplay();
   display.setTextColor(WHITE);
   display.setTextSize(3);
   display.setCursor(35,5);
-  display.println(int(state[0]));
-  display.display();delay(50);
-  }
-
-void readSensor(bool state[]){
-
-  state[2] = state[0];
-  state[3] = state[1];
-  state[0] =digitalRead(sensorPin1);
-  state[1] =digitalRead(sensorPin2);
-
-  return state;
+  display.println(count);
+  display.display();
+  Serial.println("Current amount of people in room: " + count);
 }
