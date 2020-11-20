@@ -1,21 +1,75 @@
+#include <RTCZero.h>
+
+RTCZero rtc;
+
 const byte ledPin = 13;
 
-// the setup function runs once when you press reset or power the board
-void setup() {
-  while (!Serial);
-  Serial.begin(115200);
-  delay(1000);
+// Set to random time as we reset the clock every blink cycle
 
+const byte seconds = 0;
+
+const byte minutes = 00;
+
+const byte hours = 17;
+
+const byte day = 17;
+
+const byte month = 11;
+
+const byte year = 15;
+
+// interval in seconds how long led is on/off
+const byte INTERVAL = 1;
+
+boolean isOn = false;
+
+
+void setup() {
+  while (!Serial); // wait for Serial to be initialized
+  Serial.begin(9600);
   pinMode(ledPin, OUTPUT);
   digitalWrite(ledPin, LOW);
 
-  Serial.println("Started");
+  rtc.begin();
+  Serial.println("Starting...");
+  setRTCAlarm();
+  //rtc.standbyMode();
 }
 
 void loop() {
-  Serial.println("new iteration");
-  digitalWrite(ledPin, HIGH);
-  delay(200);
-  digitalWrite(ledPin, LOW);
-  delay(2000);
+}
+
+
+void blinkLED() {
+   Serial.println("Blinking LED");
+   if(!isOn)
+   {
+   digitalWrite(ledPin, HIGH);
+   } else {
+   digitalWrite(ledPin, LOW);
+   }
+   isOn = !isOn;
+}
+
+void setRTCAlarm() {
+  rtc.setTime(hours, minutes, seconds);
+  rtc.setDate(day, month, year);
+  rtc.setAlarmSeconds(INTERVAL);
+  rtc.enableAlarm(RTCZero::MATCH_SS);
+  rtc.attachInterrupt(blinkInInterval);
+  Serial.println("set rtc.");
+}
+
+void blinkInInterval() {
+  blinkLED();
+  setRTCAlarm();
+}
+
+void printTime() {
+  Serial.print(rtc.getHours());
+  Serial.print(":");
+  Serial.print(rtc.getMinutes());
+  Serial.print(":");
+  Serial.print(rtc.getSeconds());
+  Serial.println("");
 }
