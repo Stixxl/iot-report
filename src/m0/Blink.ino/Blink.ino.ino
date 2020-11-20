@@ -51,6 +51,8 @@ void blinkLED() {
    isOn = !isOn;
 }
 
+// Set rtc and attach interrupt, since we are resetting the clock too
+// the alarm will trigger every INTERVAL seconds
 void setRTCAlarm() {
   rtc.setTime(hours, minutes, seconds);
   rtc.setDate(day, month, year);
