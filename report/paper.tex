@@ -89,14 +89,30 @@ In order to compile code for this board the installation of the Boards \textit{A
 the OLED-Screen requires the installation of the two libraries \textit{Adafruit SSD 1306} and its dependency \textit{Adafruit GFX Library}.
 \subsection{Photoelectric Barrier}
 The barrier activates, whenever something obstructs its two endpoints. See, for reference \eqref{img:iduino_highlighted}.\\
-\begin{figure}
+\begin{figure}[p]
 	\centering
 	\includegraphics[width=0.5\textwidth, keepaspectratio]{./images/iduino_highlighted.png}
 	\caption{The photoelectric sensor (Iduino 1485329) with the corresponding endpoints highlighted.}\label{img:iduino_highlighted}
 \end{figure}	
 We use this to simulate the entries of persons by passing a black stripe through each of the two sensors.
 \subsection{Interrupt Handling}
-We attach interrupt routines to both our sensors\footnote{as described here \url{https://www.arduino.cc/reference/de/language/functions/external-interrupts/attachinterrupt/}}. One advantage of this is, that the CPU can enter a power-save mode.
+We attach interrupt routines to both our sensors\footnote{as described here \url{https://www.arduino.cc/reference/de/language/functions/external-interrupts/attachinterrupt/}}. One advantage of this is, that the CPU can enter a power-save mode.\\
+On our setup it was not possible to react to \textbf{RISING} (pin changes from low to high) and \textbf{LOW} (pin is low) simultaneously. Instead we chose to attach an interrupt to the \textbf{CHANGE} (pin changes from low to high or vice versa) and retrieve the state of the pin in the corresponding method for each pin.\\
+Our logic for recognizing people entering, leaving or no change to the expected amount of people is as follows:
+\begin{itemize}
+	\item \textbf{ENTERING}
+		\begin{itemize}
+			\item
+		\end{itemize}
+	\item \textbf{LEAVING}
+		\begin{itemize}
+			\item
+		\end{itemize}
+	\item \textbf{NO\_CHANGE}
+		\begin{itemize}
+			\item
+		\end{itemize}
+\end{itemize}
 \newpage
 % Sources
 \printbibliography
