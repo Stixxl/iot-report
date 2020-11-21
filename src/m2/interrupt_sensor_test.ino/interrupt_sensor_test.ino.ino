@@ -25,10 +25,8 @@ void setup()   {
   pinMode(ledPin,OUTPUT);
   pinMode(sensorPin1,INPUT);
   pinMode(sensorPin2,INPUT);
-  attachInterrupt(digitalPinToInterrupt(sensorPin1), onRising1, RISING);
-  attachInterrupt(digitalPinToInterrupt(sensorPin2), onRising2, RISING);
-  attachInterrupt(digitalPinToInterrupt(sensorPin1), onFalling1, LOW);
-  attachInterrupt(digitalPinToInterrupt(sensorPin2), onFalling2, LOW);
+  attachInterrupt(digitalPinToInterrupt(sensorPin1), onChange1, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(sensorPin2), onChange2, CHANGE);
   //We probably also need to react to falling interrupts to catch cases where not both gates are triggered
   count = 0;
 }
@@ -38,11 +36,19 @@ void loop() {
   delay(2000);
   }
 
-void onRising1() {
-  Serial.println("Sensor 1 high");
-  isHigh1 = true;
+void onChange1() {
+  Serial.println("Sensor 1 changed");
+
+  if(digitalRead(sensorPin1) == HIGH)
+  {
+    isHigh1 = true;
+    Serial.println("Sensor 1 high");
+  } else {
+    isHigh1 = false;
+    Serial.println("Sensor 1 low");
+  }
   
-  if(isHigh2) {
+  if(isHigh1 && isHigh2) {
     Serial.println("Person exiting");
     if(count > 0) {
     count--;
@@ -51,25 +57,22 @@ void onRising1() {
 
 }
 
-void onFalling1() {
-  Serial.println("Sensor 1 low");
-  isHigh1 = false;
-}
 
-void onRising2() {
-  Serial.println("Sensor 2 high");
-  isHigh2 = true;
+void onChange2() {
+  Serial.println("Sensor 2 changed");
+  if(digitalRead(sensorPin2) == HIGH)
+  {
+    isHigh2 = true;
+    Serial.println("Sensor 2 high");
+  } else {
+    isHigh2 = false;
+    Serial.println("Sensor 2 low");
+  }
 
-  if(isHigh1) {
+  if(isHigh1 && isHigh2) {
     Serial.println("Person entering");
     count++;
   }
-}
-
-void onFalling2() {
- Serial.println("Sensor 2 low"); 
- 
- isHigh2 = false;
 }
 
 void showRoomState() {
