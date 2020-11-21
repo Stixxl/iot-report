@@ -1,3 +1,4 @@
+#include <RTCZero.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <Adafruit_GFX.h>
@@ -14,49 +15,73 @@ const byte sensorPin2 = 12;
 boolean isHigh1 = false;
 boolean isHigh2 = false;
 
+//we assume at most 255 people fit in one room
 uint8_t count;
 
+RTCZero rtc;
 
 void setup()   {            
-  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
   //Adressierung beachten, hier 0x3C!}
   Serial.begin(9600); // opens serial port, sets data rate to 9600 bps
   pinMode(ledPin,OUTPUT);
   pinMode(sensorPin1,INPUT);
   pinMode(sensorPin2,INPUT);
-  attachInterrupt(digitalPinToInterrupt(sensorPin1), onRising1, RISING);
-  attachInterrupt(digitalPinToInterrupt(sensorPin2), onRising2, RISING);
-  //We probably also need to react to falling interrupts to catch cases where not both gates are triggered
+  attachInterrupt(digitalPinToInterrupt(sensorPin1), onChange1, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(sensorPin2), onChange2, CHANGE);
   count = 0;
+
+  //timer for updating the oled screen
+  rtc.begin();
+  rtc.setTime(00, 00, 00);
+  rtc.setDate(00, 00, 00);
+
+  rtc.setAlarmSeconds(1);
+  rtc.enableAlarm(rtc.MATCH_SS);
+
+  rtc.attachInterrupt(showRoomState);
 }
 
 void loop() {
-  showRoomState();
-  delay(2000);
+  rtc.standbyMode();
   }
 
-void onRising1() {
-  Serial.println("Sensor 1 high");
-  isHigh1 = true;
-  
-  if(isHigh2) {
-    Serial.println("Person exiting");
-    count--;
+void onChange1() {
+  Serial.println("Sensor 1 changed");
+
+  if(digitalRead(sensorPin1) == HIGH)
+  {
+    isHigh1 = true;
+    Serial.println("Sensor 1 high");
+  } else {
     isHigh1 = false;
-    isHigh2 = false;
+    Serial.println("Sensor 1 low");
+  }
+  
+  if(isHigh1 && isHigh2) {
+    Serial.println("Person exiting");
+    if(count > 0) {
+    count--;
+    }
   }
 
 }
 
-void onRising2() {
-  Serial.println("Sensor 2 high");
-  isHigh2 = true;
 
-  if(isHigh1) {
+void onChange2() {
+  Serial.println("Sensor 2 changed");
+  if(digitalRead(sensorPin2) == HIGH)
+  {
+    isHigh2 = true;
+    Serial.println("Sensor 2 high");
+  } else {
+    isHigh2 = false;
+    Serial.println("Sensor 2 low");
+  }
+
+  if(isHigh1 && isHigh2) {
     Serial.println("Person entering");
     count++;
-    isHigh1 = false;
-    isHigh2 = false;
   }
 }
 
@@ -67,5 +92,4 @@ void showRoomState() {
   display.setCursor(35,5);
   display.println(count);
   display.display();
-  Serial.println("Current amount of people in room: " + count);
 }
