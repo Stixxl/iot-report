@@ -51,7 +51,8 @@
 
 \setlength{\parindent}{0pt}
 \renewcommand{\arraystretch}{1.4}
-
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem*{remark}{Remark}
 
 \title{Master-Praktikum IoT (Internet of Things)\\Written Report}
 \author{Corbinian Stiglmair \& Matthias Hermann}
@@ -104,7 +105,14 @@ On our setup it was not possible to react to \textbf{RISING} (pin changes from l
 	\includegraphics[width=\textwidth, keepaspectratio]{./images/photoelectric_model.png}
 	\caption{Photoelectronic Sensors with our naming conventions and assumptions}\label{img:photo_model}
 \end{figure}
-It is important to add, that modeling a person, that would not activate both sensors (at least once) simultaneously is impossible. Assume for contradiction that a person only triggers one sensor at a time. Then it would be impossible to tell if they leave the sensor to the right or left. We therefore make the aforementioned assumption.\\
+\subsection{Logic}
+Before continuing we briefly show the following statement:\\
+\begin{remark}
+	Modeling a person, that does not activate both sensors at least once simultaneously is impossible.
+\end{remark}
+\begin{proof}
+	Assume for contradiction that a person only triggers one sensor at a time. Then it would be impossible to tell if they leave the sensor to the right or left and the system enters an undefined state.
+\end{proof}
 Theoretically, we could use some statistical modeling using time as a third variable but this would be outside the scope of this exercise.
 Therefore we are left with the following states:
 \begin{table}[H]
