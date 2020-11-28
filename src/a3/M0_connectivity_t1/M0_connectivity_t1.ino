@@ -9,6 +9,7 @@
 const uint8_t ledPin = 13;
 uint32_t value=3;
 int taskSwitch = 0;
+int delayBetweenSendingSec = 60;
 bool failedSending = false;
 
 
@@ -235,7 +236,7 @@ void initRtc()
 {
   rtc.begin();
   rtc.setSeconds(0);
-  rtc.setAlarmSeconds(59);// or any number between 0~59, I set 59 to ensure the setup is finished before the first interrupt
+  rtc.setAlarmSeconds(10);// or any number between 0~59, I set 59 to ensure the setup is finished before the first interrupt
   rtc.enableAlarm(rtc.MATCH_SS);
   rtc.attachInterrupt(alarmMatch);
   // in alarmMatch()
