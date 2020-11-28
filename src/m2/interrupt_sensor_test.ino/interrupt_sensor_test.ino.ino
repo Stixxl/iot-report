@@ -15,6 +15,18 @@ const byte sensorPin2 = 12;
 boolean isHigh1 = false;
 boolean isHigh2 = false;
 
+//For States see attached pdf
+//we only need to track exiting and entering states since the other possibilities do not change the count
+//Entering State 1
+boolean isEntering1 = false;
+//Entering State 2
+boolean isEntering2 = false;
+
+//Exiting State 1
+boolean isExiting1 = false;
+//Exiting State 2
+boolean isExiting2 = false;
+
 //we assume at most 255 people fit in one room
 uint8_t count;
 
@@ -22,11 +34,12 @@ RTCZero rtc;
 
 void setup()   {            
   display.begin(SSD1306_SWITCHCAPVCC, 0x3C);
-  //Adressierung beachten, hier 0x3C!}
-  Serial.begin(9600); // opens serial port, sets data rate to 9600 bps
+  Serial.begin(9600);
+  
   pinMode(ledPin,OUTPUT);
   pinMode(sensorPin1,INPUT);
   pinMode(sensorPin2,INPUT);
+  
   attachInterrupt(digitalPinToInterrupt(sensorPin1), onChange1, CHANGE);
   attachInterrupt(digitalPinToInterrupt(sensorPin2), onChange2, CHANGE);
   count = 0;
@@ -35,33 +48,43 @@ void setup()   {
   rtc.begin();
   rtc.setTime(00, 00, 00);
   rtc.setDate(00, 00, 00);
-
   rtc.setAlarmSeconds(1);
   rtc.enableAlarm(rtc.MATCH_SS);
-
   rtc.attachInterrupt(showRoomState);
 }
 
 void loop() {
-  rtc.standbyMode();
+  //showRoomState();
+  //delay(2000);
+  //rtc.standbyMode();
   }
 
 void onChange1() {
-  Serial.println("Sensor 1 changed");
-
   if(digitalRead(sensorPin1) == HIGH)
   {
     isHigh1 = true;
     Serial.println("Sensor 1 high");
+    if(!isHigh2) {
+      isEntering1 = true;
+    }
   } else {
     isHigh1 = false;
     Serial.println("Sensor 1 low");
   }
+
+    if(isHigh2 && isExiting1) {
+    isExiting2 = isHigh1;
+  }
   
-  if(isHigh1 && isHigh2) {
-    Serial.println("Person exiting");
+  if(!isHigh1 && !isHigh2 && isExiting1 && isExiting2) {
+    Serial.println("Person left");
     if(count > 0) {
-    count--;
+      count--;
+    }
+  }
+  
+  if(!isHigh1 && !isHigh2) {
+     resetState();
     }
   }
 
@@ -69,20 +92,37 @@ void onChange1() {
 
 
 void onChange2() {
-  Serial.println("Sensor 2 changed");
   if(digitalRead(sensorPin2) == HIGH)
   {
-    isHigh2 = true;
     Serial.println("Sensor 2 high");
+    isHigh2 = true;
+    if(!isHigh1 && !isEntering1) {
+      isExiting1 = true;
+    }
   } else {
-    isHigh2 = false;
     Serial.println("Sensor 2 low");
+    isHigh2 = false;
   }
-
-  if(isHigh1 && isHigh2) {
-    Serial.println("Person entering");
+  if(isHigh1 && isEntering1) {
+    isEntering2 = isHigh2;
+  }
+  if(!isHigh1 && !isHigh2 && isEntering1 && isEntering2) {
+    Serial.println("Person entered");
     count++;
   }
+
+  if(!isHigh1 && !isHigh2) {
+    resetState();
+  }
+}
+
+//reset to initial state (entered whenever !isHigh1 && !isHigh2)
+void resetState() {
+    Serial.println("Entered initial state again");
+    isEntering1 = false;
+    isEntering2 = false;
+    isExiting1 = false;
+    isExiting2 = false;
 }
 
 void showRoomState() {
