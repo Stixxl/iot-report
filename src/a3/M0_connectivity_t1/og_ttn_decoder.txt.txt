@@ -1,6 +1,0 @@
-function Decoder(b, port) {
-
-return {
-peopleCount: (b[0])
-}
-}
