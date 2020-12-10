@@ -1,6 +1,8 @@
-from kafka import KafkaConsumer
+from kafka import KafkaConsumer, TopicPartition
 import platform, socket, re, uuid, json, psutil, logging
+import logging
 
+logging.basicConfig(level=logging.DEBUG)
 
 def getSystemInfo():
     try:
@@ -20,10 +22,19 @@ def getSystemInfo():
 
 
 print("Starting Consumer 2;")
-consumer = KafkaConsumer('number')
 print(json.loads(getSystemInfo()))
+consumer = KafkaConsumer(bootstrap_servers="localhost:9093",
+                         client_id="number_consumer2",
+                         auto_offset_reset='earliest',
+                         enable_auto_commit=False,
+                         consumer_timeout_ms=1000)
+
+partition = TopicPartition('number', 0)
+consumer.assign([partition])
+consumer.seek_to_beginning(partition)
 
 sum_numbers = 0
 for msg in consumer:
-    sum += msg.value
-print("The sum of all numbers so far recorded is: {:i}", sum_numbers)
+    sum_numbers += int.from_bytes(msg.value, 'big')
+    
+print("The sum of all numbers recorded is: {:i}", sum_numbers)
