@@ -26,7 +26,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 % Tables
-\usepackage{tabu}
+\usepackage{tabularx}
 % Subfigures
 \usepackage{subfig}
 
@@ -50,7 +50,9 @@
 
 
 \setlength{\parindent}{0pt}
-
+\renewcommand{\arraystretch}{1.4}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem*{remark}{Remark}
 
 \title{Master-Praktikum IoT (Internet of Things)\\Written Report}
 \author{Corbinian Stiglmair \& Matthias Hermann}
@@ -71,22 +73,12 @@
 \begin{sloppypar}
 \section{Introduction}
 This report is meant to document the progress made on our given project. This projects goal is to configure (and program) a system, that can give an accurate count of the current amount of persons in a room.
-\section{Tools and System Components}
-Our Prototype consists of the following components:
-\begin{itemize}
-	\item Breadboard\footnote{TRU COMPONENTS 0165-40-4-28010 Steckplatine}
-	\item Adafruit Feather M0 Board (with RFM95 LoRa Radio - 900MHz - RadioFruit)
-	\item OLED Screen\footnote{Joy-it SBC-OLED01}
-	\item Photoelectric Barrier\footnote{Iduino 1485329}
-	\item Jumper Cables
-	\item USB Cable
-\end{itemize}
-\section{Approach}
-Instead of focusing on the individual work sessions, this report will instead describe how partial subgoals were achieved and how the subgoals are intertwined with each other.
+\section{Setup}
+In the following we want to briefly introduce our setup and then go into more detail as to how we handled the interrupt routines and how we interpret those interrupts.
 \subsection{Adafruit Feather M0 Board}
 In order to compile code for this board the installation of the Boards \textit{Arduino SAMD Boards} and \textit{Adafruit SAMD Boards} is required.
 \subsection{OLED-Screen}
-the OLED-Screen requires the installation of the two libraries \textit{Adafruit SSD 1306} and its dependency \textit{Adafruit GFX Library}.
+The OLED-Screen requires the installation of the two libraries \textit{Adafruit SSD 1306} and its dependency \textit{Adafruit GFX Library}.
 \subsection{Photoelectric Barrier}
 The barrier activates, whenever something obstructs its two endpoints. See, for reference \eqref{img:iduino_highlighted}.\\
 \begin{figure}[p]
@@ -97,22 +89,47 @@ The barrier activates, whenever something obstructs its two endpoints. See, for 
 We use this to simulate the entries of persons by passing a black stripe through each of the two sensors.
 \subsection{Interrupt Handling}
 We attach interrupt routines to both our sensors\footnote{as described here \url{https://www.arduino.cc/reference/de/language/functions/external-interrupts/attachinterrupt/}}. One advantage of this is, that the CPU can enter a power-save mode.\\
-On our setup it was not possible to react to \textbf{RISING} (pin changes from low to high) and \textbf{LOW} (pin is low) simultaneously. Instead we chose to attach an interrupt to the \textbf{CHANGE} (pin changes from low to high or vice versa) and retrieve the state of the pin in the corresponding method for each pin.\\
-Our logic for recognizing people entering, leaving or no change to the expected amount of people is as follows:
-\begin{itemize}
-	\item \textbf{ENTERING}
-		\begin{itemize}
-			\item
-		\end{itemize}
-	\item \textbf{LEAVING}
-		\begin{itemize}
-			\item
-		\end{itemize}
-	\item \textbf{NO\_CHANGE}
-		\begin{itemize}
-			\item
-		\end{itemize}
-\end{itemize}
+On our setup it was not possible to react to \textbf{RISING} (pin changes from low to high) and \textbf{LOW} (pin is low) simultaneously. Instead we chose to attach an interrupt to the \textbf{CHANGE} (pin changes from low to high or vice versa) and retrieve the state of the pin in the corresponding method for each pin. See \eqref{img:photo_model} for our setup.\\
+\begin{figure}[p]
+	\centering
+	\includegraphics[width=\textwidth, keepaspectratio]{./images/photoelectric_model.png}
+	\caption{Photoelectronic Sensors with our naming conventions and assumptions}\label{img:photo_model}
+\end{figure}
+\subsection{Logic}
+Before continuing we briefly show the following statement:\\
+\begin{remark}
+	Modeling a person, that does not activate both sensors at least once simultaneously is impossible.
+\end{remark}
+\begin{proof}
+	Assume for contradiction that a person only triggers one sensor at a time. Then it would be impossible to tell if they leave the sensor to the right or left and the system enters an undefined state.
+\end{proof}
+Theoretically, we could use some statistical modeling using time as a third variable but this would be outside the scope of this exercise.\\
+Additionally, we assume that only one person tries to enter at the same time.
+Therefore we are left with the following states:
+\begin{table}[H]
+	\centering
+\begin{tabularx}{.9\textwidth}{| l | X |}
+			\hline
+			Event & State Progression \\
+			\hline
+			Entering & $\mathit{isHigh1} \wedge \neg \mathit{isHigh2} \Longrightarrow \mathit{isHigh1} \wedge \mathit{isHigh2} \Longrightarrow \neg \mathit{isHigh1} \wedge \mathit{isHigh2} \Longrightarrow \neg \mathit{isHigh1} \wedge \neg \mathit{isHigh2}$\\
+			\hline
+			Peeking (Outside) & $\mathit{isHigh1} \wedge \neg \mathit{isHigh2} \Longrightarrow \mathit{isHigh1} \wedge \mathit{isHigh2} \Longrightarrow \mathit{isHigh1} \wedge \neg \mathit{isHigh2} \Longrightarrow \neg \mathit{isHigh1} \wedge \neg \mathit{isHigh2}$\\
+			\hline
+			Peeking (Outside short) & $\mathit{isHigh1} \wedge \neg \mathit{isHigh2} \Longrightarrow \neg \mathit{isHigh1} \wedge \neg \mathit{isHigh2}$\\
+			\hline
+			Exiting &  $\neg \mathit{isHigh1} \wedge \mathit{isHigh2} \Longrightarrow \mathit{isHigh1} \wedge \mathit{isHigh2} \Longrightarrow \mathit{isHigh1} \wedge \neg \mathit{isHigh2} \Longrightarrow \neg \mathit{isHigh1} \wedge \neg \mathit{isHigh2}$\\
+			\hline
+			Peeking (Inside) & $\neg \mathit{isHigh1} \wedge \mathit{isHigh2} \Longrightarrow \mathit{isHigh1} \wedge \mathit{isHigh2} \Longrightarrow \neg \mathit{isHigh1} \wedge \mathit{isHigh2} \Longrightarrow \neg \mathit{isHigh1} \wedge \neg \mathit{isHigh2}$\\
+			\hline
+			Peeking (Inside short) & $\neg \mathit{isHigh1} \wedge \mathit{isHigh2} \Longrightarrow \neg \mathit{isHigh1} \wedge \neg \mathit{isHigh2}$\\
+			\hline
+		\end{tabularx}
+		\caption{Possible states for our model. "$\Longrightarrow$" indicates a change in the (sensor-) state. \textit{isHigh1} and \textit{isHigh2} are boolean variables, that indicate if sensor 1 or sensor 2 respectively is high.}
+		\label{tab:possible_states}
+\end{table}
+Without loss of generality we assume $\neg \mathit{isHigh1} \wedge \neg \mathit{isHigh2}$, namely both sensors having a \textbf{LOW} reading, as our initial state and left it out in the table for readability.\\
+Every other chain of events is not relevant for our use case, namely keeping track of the current amount of people in a room. The cases 1 - 3 (People coming from the hallway trying to "enter") and 4 - 6 (People coming from the room trying to "exit") are symmetric and were written out for completeness sake.\\
 \newpage
 % Sources
 \printbibliography
