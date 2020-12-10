@@ -16,13 +16,14 @@ namespace NumberSender
         public EventPublisher(EventPublisherSettings settings)
         {
             this._settings = settings;
+            Console.WriteLine($"Initializing EventPublisher with ID {settings.ClientId}, URL {settings.Host} and Topic {settings.TopicName}");
         }
 
         public async void SendAsync(int data)
         {
             Console.WriteLine($"Sending Number {data} to MQTT Broker");
             var message = new MqttApplicationMessageBuilder()
-                .WithTopic("Number/Topic")
+                .WithTopic(this._settings.TopicName)
                 .WithPayload(data.ToString())
                 .Build();
 

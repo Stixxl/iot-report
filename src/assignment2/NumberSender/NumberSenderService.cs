@@ -19,6 +19,8 @@ namespace NumberSender
             this._eventPublisher = eventPublisher;
             this._numberGenerator = numberGenerator;
             this._settings = settings;
+
+            Console.WriteLine($"Initializing Numbersender, sending time: {this._settings.Duration}ms with {this._settings.TimeBetweenSending}ms intervall");
         }
 
         public void run()
@@ -27,6 +29,7 @@ namespace NumberSender
 
             SetupTimer(ref sendTimer, this._settings.TimeBetweenSending, SendEvent);
             SetupTimer(ref stopTimer, this._settings.Duration, StopSending);
+
 
             Console.WriteLine("Press the Enter key to exit the program at any time... ");
             Console.ReadLine();
@@ -45,6 +48,7 @@ namespace NumberSender
             sendTimer.AutoReset = false;
             sendTimer.Enabled = false;
             Console.WriteLine("Press any key to stop the app", e.SignalTime);
+
         }
 
         private void SetupTimer(ref Timer timer, int intervalTime, System.Timers.ElapsedEventHandler e){

@@ -28,3 +28,9 @@ C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\obj\Debug\net5
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\obj\Debug\net5.0\NumberSender.pdb
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\obj\Debug\net5.0\NumberSender.genruntimeconfig.cache
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\MQTTnet.dll
+C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\Microsoft.Extensions.Configuration.FileExtensions.dll
+C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\Microsoft.Extensions.Configuration.Json.dll
+C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\Microsoft.Extensions.FileProviders.Abstractions.dll
+C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\Microsoft.Extensions.FileProviders.Physical.dll
+C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\Microsoft.Extensions.FileSystemGlobbing.dll
+C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\appsettings.json
