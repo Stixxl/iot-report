@@ -24,6 +24,9 @@ services:
   consumer1:
           build: ./consumer1
 
+  consumer2:
+          build: ./consumer2
+
 volumes:
   zookeeper_data:
     driver: local
