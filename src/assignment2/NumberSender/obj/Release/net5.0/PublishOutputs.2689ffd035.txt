@@ -7,6 +7,7 @@ C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Release\ne
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Release\net5.0\publish\Microsoft.Extensions.Configuration.dll
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Release\net5.0\publish\Microsoft.Extensions.Configuration.Abstractions.dll
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Release\net5.0\publish\Microsoft.Extensions.Configuration.Binder.dll
+C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Release\net5.0\publish\Microsoft.Extensions.Configuration.EnvironmentVariables.dll
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Release\net5.0\publish\Microsoft.Extensions.Configuration.FileExtensions.dll
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Release\net5.0\publish\Microsoft.Extensions.Configuration.Json.dll
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Release\net5.0\publish\Microsoft.Extensions.DependencyInjection.dll

@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "d3TqjH95S8ERcxUcjrHTZv6kqlC6eK7ZQtlgVPcRtlTZBoXnD931EzQeUFE+hkTWo39KzyMInoIxfR12mRia6g==",
+  "dgSpecHash": "+CKtz3Yq+IGVVzAMqGoYTVVI+AjmTWEow2nLVK5dHG2u7iGHLg+w7HU9ld1XvmS1WU9bBYIttVysCpanQTTH7Q==",
   "success": true,
   "projectFilePath": "C:\\Users\\info\\source\\repo\\iot-report\\src\\assignment2\\NumberSender\\NumberSender.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\info\\.nuget\\packages\\microsoft.extensions.configuration\\5.0.0\\microsoft.extensions.configuration.5.0.0.nupkg.sha512",
     "C:\\Users\\info\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\5.0.0\\microsoft.extensions.configuration.abstractions.5.0.0.nupkg.sha512",
     "C:\\Users\\info\\.nuget\\packages\\microsoft.extensions.configuration.binder\\5.0.0\\microsoft.extensions.configuration.binder.5.0.0.nupkg.sha512",
+    "C:\\Users\\info\\.nuget\\packages\\microsoft.extensions.configuration.environmentvariables\\5.0.0\\microsoft.extensions.configuration.environmentvariables.5.0.0.nupkg.sha512",
     "C:\\Users\\info\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\5.0.0\\microsoft.extensions.configuration.fileextensions.5.0.0.nupkg.sha512",
     "C:\\Users\\info\\.nuget\\packages\\microsoft.extensions.configuration.json\\5.0.0\\microsoft.extensions.configuration.json.5.0.0.nupkg.sha512",
     "C:\\Users\\info\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\5.0.0\\microsoft.extensions.dependencyinjection.5.0.0.nupkg.sha512",

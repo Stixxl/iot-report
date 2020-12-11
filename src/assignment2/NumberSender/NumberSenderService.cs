@@ -21,6 +21,8 @@ namespace NumberSender
             this._settings = settings;
 
             Console.WriteLine($"Initializing Numbersender, sending time: {this._settings.Duration}ms with {this._settings.TimeBetweenSending}ms intervall");
+            Console.WriteLine("wait a few seconds until mosquitto broker is up an running..");
+            System.Threading.Thread.Sleep(5000);
         }
 
         public void run()

@@ -34,3 +34,4 @@ C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\Microsoft.Extensions.FileProviders.Physical.dll
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\Microsoft.Extensions.FileSystemGlobbing.dll
 C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\appsettings.json
+C:\Users\info\source\repo\iot-report\src\assignment2\NumberSender\bin\Debug\net5.0\Microsoft.Extensions.Configuration.EnvironmentVariables.dll

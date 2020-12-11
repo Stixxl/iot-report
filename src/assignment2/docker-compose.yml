@@ -1,0 +1,42 @@
+version: '3'
+services:
+  mosquitto:
+    image: eclipse-mosquitto
+    expose: 
+      - "1883"
+    links:
+      - numbercounter
+    networks:
+      - interal
+  
+  numbercounter:
+    # image to fetch from docker hub
+    image: 'counter-image'
+    environment:
+      - EventPublisherSettings:Host=mosquitto
+      - NumberSenderSettings:TimeBetweenSending=1000
+
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    networks:
+      - interal
+  
+  kafka-mqtt:
+    container_name: kafka-mqtt
+    hostname: kafka-mqtt
+    image: confluentinc/cp-kafka-mqtt:latest
+    network_mode: host
+    networks:
+      - interal
+    ports:
+      - 1884:1884
+    environment:
+      KAFKA_MQTT_BOOTSTRAP_SERVERS: OUTSIDE://localhost:9092 # Kafka host ip
+      KAFKA_MQTT_LISTENERS: mosquitto:1883 # mqtt host  
+      KAFKA_MQTT_TOPIC_REGEX_LIST: mqtt.numbers:.*numbers # topic name ? untested
+      KAFKA_MQTT_CONFLUENT_TOPIC_REPLICATION_FACTOR: 1
+
+networks:
+  interal:
+    # Use a custom driver
+    driver: bridge
