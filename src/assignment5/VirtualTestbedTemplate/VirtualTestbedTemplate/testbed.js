@@ -49,6 +49,7 @@ rl.on('line', (input) => {
 if (myArgs.length==2){
 	//read and process file given in myArgs[1]
 	processFile(myArgs[1],port);
+	sendCurrentTime(port);
 } else {
 	sendCurrentTime(port);
 }
@@ -58,6 +59,19 @@ if (myArgs.length==2){
 //Echos all lines and handles SEND commands by pushing them to the MQTT gateway of the IoT platform
 function handleDeviceString(str){
   console.log('>>> '+str);
+  if(str.startsWith("<<SEND:")){
+
+	var payload = {"username": "username",
+				   "<sensor Name>": "<sensor value>",
+				   "device_id": "<deviceID>",
+				   "timestamp": "<timestamp in mseconds>"};
+
+	//myObj = { "name":"John", "age":30, "car":null };
+	var payload = str.substring(7, str.length-3).split(":")
+
+	//<<SEND:1609024921:0:>>
+	console.log("Hier zu mqtt senden");
+  }
 }
 
 

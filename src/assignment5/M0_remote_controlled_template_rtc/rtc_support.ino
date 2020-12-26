@@ -75,7 +75,7 @@ void getTimeInCalender(uint8_t &day, uint8_t &month, uint8_t &year, uint8_t &hou
 
 }
 
-unsigned long setAlarmFromSeconds(uint32_t time) {
+void setAlarmFromSeconds(uint32_t time) {
   uint8_t year, month, day, hours, minutes, seconds;
   convertFromSeconds(time,day,month,year,hours,minutes,seconds);
 
@@ -85,7 +85,7 @@ unsigned long setAlarmFromSeconds(uint32_t time) {
   rtc.setAlarmDay(day);
   rtc.setAlarmMonth(month);
   rtc.setAlarmYear(year);
-
+  
   nextAlarm=time;
 }
 

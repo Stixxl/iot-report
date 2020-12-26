@@ -24,14 +24,14 @@ struct PlannedTask {
 };
 
 int msgPeriod = 30;               //Period between two sends
-int showPeriod = 20;              //Period between two showRoomState calls
+int showPeriod = 10;             //Period between two showRoomState calls (has to be set to 1200 for assignment)
 int defaultPeriod = 20;           //Period between two alarms if no task is available
 int resetPeriod = 86400;          //Reset count every 24 hours in seconds
 volatile uint8_t count = 0;       //Current number of people
 volatile uint8_t prediction = 0;  //Predicted number of people
 int timewarpFactor=1;             //Runs time with different speed
+bool rtcKickstart = true;        //Starts the rtc/alarm cycle if no tasks were provided
 uint32_t initialTime=0;           //Keeps track of the intial time set when the board was booted
-
 uint32_t nextAlarm;               //Timestamp in seconds for the next alarm
 const uint32_t capacity=1000;      //Maximum capacity of task list
 
@@ -216,7 +216,6 @@ void setup() {
   pinMode(triggerOut, OUTPUT);
   digitalWrite(triggerIn, LOW);   
   digitalWrite(triggerOut, LOW);   
-  
  
   if(!display.begin(SSD1306_SWITCHCAPVCC, 0x3C)) { // Address 0x3D for 128x64
     Serial.println(F("SSD1306 allocation failed"));
@@ -319,10 +318,12 @@ void setup() {
 
 
 void alarmMatch() {
-  uint32_t nextAlarm = getTimeInSeconds();
-  runAvailTasks();
-  nextAlarm=nextAlarm+60;
-  setAlarmFromSeconds(nextAlarm);
+  //Serial.println("Hoffentlich");
+  runTaskControlled(11,0,true);
+  if (getTimeInSeconds()>nextAlarm){
+    runAvailTasks();
+  }
+  setAlarmFromSeconds(getTimeInSeconds()+showPeriod);
 }
 
 void loop() {
@@ -353,11 +354,11 @@ void loop() {
     int countit=0;
     while (strlen(str)>3) {
       found=sscanf(str,"%d:%d:%d\n",&time,&cmd,&param);
-      Serial.print("TIME: ");
-      Serial.println(time);
-      Serial.print("CMD: ");
-      Serial.println(cmd);
-      Serial.print("PARAM: ");
+      Serial.print("INSERT TS: ");
+      Serial.print(time);
+      Serial.print(" CMD: ");
+      Serial.print(cmd);
+      Serial.print(" ARGS: ");
       Serial.println(param);
 
       if (found!=EOF || found!=3){
@@ -375,14 +376,19 @@ void loop() {
         str++;
       }
       str++;
-      Serial.println(strlen(str));
+      //Serial.println(strlen(str));
 
 
     }
     free(str1);
     printTasklist();
-  }
+}
 
+if(rtcKickstart){
+  rtcKickstart = false;
+  alarmMatch();
+}
+  
 //This runs all the time because nextAlarm is initizalised as 0
 #ifndef WITH_RTC
   if (getTimeInSeconds()>nextAlarm){
@@ -390,6 +396,7 @@ void loop() {
   }
   showRoomState();
 #endif
+
   digitalWrite(ledPin, HIGH);
   delay(200);
   digitalWrite(ledPin, LOW);
@@ -413,6 +420,5 @@ extern char *__brkval;
  
 int freeMemory() {
   char top;
-  Serial.println("LOL");
   return &top - reinterpret_cast<char*>(sbrk(0));
 }
