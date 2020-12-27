@@ -1,9 +1,12 @@
 const SerialPort = require('serialport');
 const ConsoleReader = require('readline');
+const Mqtt = require('mqtt');
+const kafka = require('kafka-node');
+
+const client = new kafka.KafkaClient({kafkaHost: '138.246.232.197:9092'});
 
 const Readline = SerialPort.parsers.Readline;
 const parser = new Readline();
-
 
 var first=true;
 
@@ -43,6 +46,22 @@ rl.on('line', (input) => {
   port.write(input);
 });
 
+const Consumer = kafka.Consumer;
+const consumer = new Consumer(
+    client,
+        [
+            { topic: '01_06_020'}
+        ],
+        {
+            autoCommit: false
+        }
+    );
+ 
+consumer.on('message', function (message) {
+	message=message+"\n";
+	port.write(message);
+	console.log(`Received: ${message.value.toString()}`)
+})
 
 //If only the serial port is given, send current time only.
 //If a file name is given, open file and read the commands and set he time to the time of the first command - 30 seconds
@@ -61,19 +80,32 @@ function handleDeviceString(str){
   console.log('>>> '+str);
   if(str.startsWith("<<SEND:")){
 
-	var payload = {"username": "username",
-				   "<sensor Name>": "<sensor value>",
-				   "device_id": "<deviceID>",
-				   "timestamp": "<timestamp in mseconds>"};
+	var serialData = str.substring(7, str.length-3).split(":")
 
-	//myObj = { "name":"John", "age":30, "car":null };
-	var payload = str.substring(7, str.length-3).split(":")
+    var payload = {
+		username:"group4_2020_ws",
+		sensor_matthias: serialData[1],
+		device_id: "76",
+		timestamp: serialData[0]+"00"
+    };
 
-	//<<SEND:1609024921:0:>>
-	console.log("Hier zu mqtt senden");
+	var options = {
+	  host: '131.159.35.132',
+	  port: 1883,
+	  username: 'JWT',
+	  password: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2MDgyMjcyMjYsImlzcyI6ImlvdHBsYXRmb3JtIiwic3ViIjoiMjVfNzYifQ.I8QPuYCj9JfVSH62stk0vDWDX4a_Duc_tMBM34oKhztpAy6EGJckVF6Ekef-zjLJtrrTbHlUa9NRj-WngSV0suU-DM07EGERz05TS1yGd7wWGu9JRzz4kR0XFdU93UnpUpQs1bVTVWy92UILu1V0MGWY6NXKod9eTGPZCk7zd2NRZG91_0vg_9N0nesDjhQB03_-5wDUQ1L233TIvWu_35_JNisDFfU_kKVwt-CYXZcRdmcD0X4B_D8VF0RstCyR91sTzQC2VDmkIYlZw6mYd2kc9oarNO5PjUJVhPDqdML5hk06TOVU68WMIMRipzgCiaauEr06ixVitH3yFCXzUlGvdLyN3Dg2LXLcDb-Cbvs1OjFG2JNc8K3WDALsLKanKkIcAflG05S--KckiMaSxqUXov0cT51SjsZnUFzi8iDsfFcnHmcrseqkaxF_AuD8UfqIu9-k1khOICg2y3jXoIK_HXKRbDSFeTe36uTCXZpVYqj21M0eoFA-3NwrcnfXRH8aTGl74L0UXAmCpD9CNS9DOPdh7mrRzxgerU1N3JLR5Qk_2yzVaI18ImvfLTz2hFrqI2jjHgB3LKv9cPu7gBclIFEiqffvg4IyHpm6ZGzuZlbpmymPh0iLN0gns4f0Lk-Q43xA2oEkaCJd0nFF_sJzN6OelaOPteeekIBJuKk',
+	  clean: true
+	}
+
+	var client = Mqtt.connect(options)
+	
+	client.on('connect', function() {
+		console.log('MQTT client connected');
+		client.publish('25_76', JSON.stringify(payload));
+		console.log("sent to mqtt");
+	});
   }
 }
-
 
 function sendCurrentTime(port) {
     var utc = new Date();

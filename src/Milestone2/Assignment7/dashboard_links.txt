@@ -1,0 +1,4 @@
+Dashboard for Kafka:
+https://iotplatform.caps.in.tum.de:5601/s/iot_ws_2020/goto/ad11204510dcf0b14e721a1984f463f8
+Dashboard for Historic Data:
+https://iotplatform.caps.in.tum.de:5601/s/iot_ws_2020/goto/86330da08ea1b3801fe30b23361c3ade
